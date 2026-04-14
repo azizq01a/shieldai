@@ -2,6 +2,11 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import "./App.css";
 
+// ============================================
+// ✅ ENVIRONMENT CONFIGURATION - PRODUCTION READY
+// ============================================
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
+
 function App() {
   const [url, setUrl] = useState("");
   const [loading, setLoading] = useState(false);
@@ -12,17 +17,23 @@ function App() {
   const [xssLoading, setXssLoading] = useState(false);
   const [discoveredParams, setDiscoveredParams] = useState([]);
 
+  // ============================================
+  // LOAD HISTORY FROM LOCAL STORAGE
+  // ============================================
   useEffect(() => {
     const saved = localStorage.getItem("shieldaiHistory");
     if (saved) setAnalysisHistory(JSON.parse(saved));
   }, []);
 
+  // ============================================
+  // SECURITY ANALYSIS FUNCTION
+  // ============================================
   const startSecurityAnalysis = async () => {
     setLoading(true);
     setAnalysisResults(null);
     
     try {
-      const res = await axios.post("http://localhost:5000/api/security/analyze", {
+      const res = await axios.post(`${API_BASE_URL}/api/security/analyze`, {
         url: url,
         deepAnalysis: true
       });
@@ -46,12 +57,15 @@ function App() {
     }
   };
 
+  // ============================================
+  // XSS ANALYSIS FUNCTION
+  // ============================================
   const startXSSAnalysis = async () => {
     setXssLoading(true);
     setXssResults(null);
     
     try {
-      const res = await axios.post("http://localhost:5000/api/xss/analyze", {
+      const res = await axios.post(`${API_BASE_URL}/api/xss/analyze`, {
         url: url,
         params: discoveredParams.length > 0 ? discoveredParams : null
       });
@@ -63,10 +77,13 @@ function App() {
     }
   };
 
+  // ============================================
+  // DISCOVER PARAMETERS FUNCTION
+  // ============================================
   const discoverParameters = async () => {
     setXssLoading(true);
     try {
-      const res = await axios.post("http://localhost:5000/api/params/discover", { url: url });
+      const res = await axios.post(`${API_BASE_URL}/api/params/discover`, { url: url });
       setDiscoveredParams(res.data.parameters);
       alert(`Discovered ${res.data.parameters.length} parameters for analysis`);
     } catch (error) {
@@ -76,6 +93,9 @@ function App() {
     }
   };
 
+  // ============================================
+  // HELPER FUNCTION FOR CONFIDENCE CLASS
+  // ============================================
   const getConfidenceClass = (confidence) => {
     switch(confidence) {
       case 'High': return 'confidence-high';
@@ -84,8 +104,12 @@ function App() {
     }
   };
 
+  // ============================================
+  // RENDER COMPONENT
+  // ============================================
   return (
     <div className="app">
+      {/* SIDEBAR */}
       <div className="sidebar">
         <div className="logo">
           <h2>🛡️ ShieldAI</h2>
@@ -94,16 +118,22 @@ function App() {
         </div>
         
         <nav className="nav-menu">
-          <button className={`nav-item ${activeTab === "analyzer" ? "active" : ""}`} 
-                  onClick={() => setActiveTab("analyzer")}>
+          <button 
+            className={`nav-item ${activeTab === "analyzer" ? "active" : ""}`} 
+            onClick={() => setActiveTab("analyzer")}
+          >
             <span>🛡️</span> Security Analyzer
           </button>
-          <button className={`nav-item ${activeTab === "xss" ? "active" : ""}`}
-                  onClick={() => setActiveTab("xss")}>
+          <button 
+            className={`nav-item ${activeTab === "xss" ? "active" : ""}`}
+            onClick={() => setActiveTab("xss")}
+          >
             <span>🔬</span> XSS Analysis
           </button>
-          <button className={`nav-item ${activeTab === "dashboard" ? "active" : ""}`}
-                  onClick={() => setActiveTab("dashboard")}>
+          <button 
+            className={`nav-item ${activeTab === "dashboard" ? "active" : ""}`}
+            onClick={() => setActiveTab("dashboard")}
+          >
             <span>📊</span> Dashboard
           </button>
         </nav>
@@ -115,7 +145,12 @@ function App() {
         </div>
       </div>
       
+      {/* MAIN CONTENT */}
       <div className="main-content">
+        
+        {/* ============================================ */}
+        {/* SECURITY ANALYZER TAB */}
+        {/* ============================================ */}
         {activeTab === "analyzer" && (
           <>
             <header className="header">
@@ -218,6 +253,9 @@ function App() {
           </>
         )}
         
+        {/* ============================================ */}
+        {/* XSS ANALYSIS TAB */}
+        {/* ============================================ */}
         {activeTab === "xss" && (
           <>
             <header className="header">
@@ -330,6 +368,9 @@ function App() {
           </>
         )}
         
+        {/* ============================================ */}
+        {/* DASHBOARD TAB */}
+        {/* ============================================ */}
         {activeTab === "dashboard" && (
           <div className="dashboard">
             <h2>📊 Analysis Dashboard</h2>

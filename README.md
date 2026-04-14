@@ -5,4 +5,5 @@ AI-powered Security Observation Platform that analyzes attack surface, parameter
  
 https://shieldai-tau.vercel.app/
 https://youtu.be/hAArGvvCQmY
-<img width="512" height="512" alt="image" src="https://github.com/user-attachments/assets/6cbf155b-4e6f-483b-a12b-e5e09a036783" />
+
+<img width="512" height="512" alt="youtube" src="https://github.com/user-attachments/assets/f6ab75b4-6da0-440c-a3ee-a42377d84800" />

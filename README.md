@@ -4,6 +4,5 @@
 AI-powered Security Observation Platform that analyzes attack surface, parameters, and security headers with manual verification workflow. Built for hackathons and real-world security awareness.
  
 https://shieldai-tau.vercel.app/
-https://youtu.be/hAArGvvCQmY
 
-<img width="512" height="512" alt="youtube" src="https://github.com/user-attachments/assets/f6ab75b4-6da0-440c-a3ee-a42377d84800" />
+https://youtu.be/hAArGvvCQmY

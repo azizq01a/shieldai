@@ -3,9 +3,11 @@ import axios from "axios";
 import "./App.css";
 
 // ============================================
-// ✅ ENVIRONMENT CONFIGURATION - PRODUCTION READY
+// ✅ ENVIRONMENT CONFIGURATION - LOCAL + PRODUCTION
 // ============================================
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
+const API_BASE_URL = process.env.NODE_ENV === 'development' 
+  ? "http://localhost:5000"
+  : "https://shieldai-fy9m.onrender.com";
 
 function App() {
   const [url, setUrl] = useState("");
@@ -87,7 +89,7 @@ function App() {
       setDiscoveredParams(res.data.parameters);
       alert(`Discovered ${res.data.parameters.length} parameters for analysis`);
     } catch (error) {
-      alert("Parameter discovery failed");
+      alert("Parameter discovery failed: " + (error.response?.data?.error || error.message));
     } finally {
       setXssLoading(false);
     }

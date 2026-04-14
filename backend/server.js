@@ -10,7 +10,35 @@ import { JSEndpointExtractor } from "./scanners/jsEndpointExtractor.js";
 dotenv.config();
 
 const app = express();
-app.use(cors());
+
+// ============================================
+// ✅ CORS CONFIGURATION - PRODUCTION READY
+// ============================================
+const allowedOrigins = [
+  'http://localhost:3000',
+  'http://localhost:5000',
+  'https://shieldai-tau.vercel.app',
+  'https://shieldai-fy9m.onrender.com'
+];
+
+// CORS middleware
+app.use((req, res, next) => {
+  const origin = req.headers.origin;
+  
+  if (allowedOrigins.includes(origin)) {
+    res.header('Access-Control-Allow-Origin', origin);
+  }
+  
+  res.header('Access-Control-Allow-Credentials', true);
+  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
+  
+  if (req.method === 'OPTIONS') {
+    return res.sendStatus(200);
+  }
+  next();
+});
+
 app.use(express.json());
 
 // ============== DISCLAIMER PROFESSIONNEL ==============
@@ -413,4 +441,5 @@ app.listen(PORT, () => {
   console.log(`🛡️ ShieldAI Security Analysis Platform running on port ${PORT}`);
   console.log(`📋 Realistic security observations - No fake vulnerabilities`);
   console.log(`⚠️ All findings require manual verification`);
+  console.log(`✅ CORS enabled for: ${allowedOrigins.join(', ')}`);
 });
